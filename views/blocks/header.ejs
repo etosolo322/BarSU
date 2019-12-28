@@ -1,0 +1,75 @@
+<link rel="stylesheet" type="text/css" href="../public/css/header.css">
+<div class = 'allHeader'>
+
+  <div class = leftHeader>
+  <a href='/'>
+  </a>
+  </div>
+
+      <div class=header>
+              <ul>
+              <div class = 'doubleCenter'>
+            <li>
+            <a href="/menu">Меню
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span></a>
+            </li>
+
+            <li>
+            <a href="/about">О нас
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span></a>
+            </li>
+
+          </div>
+
+            <li>
+              <a href="/armor">Бронирование
+               <span></span>
+               <span></span>
+               <span></span>
+               <span></span></a>
+            </li>
+
+
+            <li>
+              <a href="/order">Заказ
+                <span></span>
+               <span></span>
+               <span></span>
+               <span></span></a>
+            </li>
+
+            </ul>
+            <a href = '/admin' target='_blank'>
+            <div id='goToAdmin'> </div></a>
+      </div>
+
+      <div class = 'rightHeader' id='rightHeader'>
+
+        <script type="application/javascript">
+
+        const  ip = document.createElement("p");
+        ip.className = 'ip';
+        ip.id = 'ip'
+        document.getElementById('rightHeader').appendChild(ip);
+
+          function getIP(json) {
+            if (document.cookie !=''){
+            //  alert( document.cookie );
+              ip.innerHTML = document.cookie;
+              }
+                  else {
+                    document.cookie = "name="+ navigator.platform +" " + navigator.appCodeName +" " +json.ip;
+                    ip.innerHTML = document.cookie;
+                  }
+            }
+        </script>
+        
+        <script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>
+      </div>
+</div>
