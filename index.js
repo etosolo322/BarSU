@@ -4,7 +4,7 @@ const bodyParser = require( 'body-parser' );
 const app = express();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-
+const _ = require('underscore');
 var path = require('path');
 var fs = require('fs');
 var async = require('async');
@@ -15,6 +15,7 @@ const dbName = 'playGame';
 var massivZaskazov = {};
 const massMenu = [];
   const rez =   require("./public/modules/menuSearch");
+  const base =   require("./public/modules/cnt_base.json");
   var massiv = [];
 
 app.use( bodyParser.urlencoded( {extended:true} ) );
@@ -41,56 +42,63 @@ function randomNumber(min,max){
 }
 
 function randomCountry(coutry,count){
+
     return new Promise ((resolve, reject) => {
-let resultCountry = [];
-    rez("country", {"country":String(coutry)})
-        .then((item) =>{
-        //  console.log(item)
-            for (let i=0;i<count;i++){
-          let peremennaya = item[randomNumber(0,item.length)]
-      console.log(peremennaya._id)
-      let  errors = 0;
-          for (j = -1; j < resultCountry.length; j++) {
-              if (peremennaya == resultCountry[j]) {
-                errors = 1;
-                i--;
+        let resultCountry = [];
+        rez("country", {"country":String(coutry)})
+          .then((item) =>{
+          //console.log(base.countriesBase[0].id)
+
+        for (let i = 0; i < count; i++){
+            let peremennaya = item[randomNumber(0,item.length)]
+        //    console.log(peremennaya._id)
+            let  errors = 0;
+            for (j = -1; j < resultCountry.length; j++) {
+                if (peremennaya == resultCountry[j]) {
+                  errors = 1;
+                  i--;
+            }
+           }
+          if (errors != 1) {
+          //  console.log(i);
+            resultCountry.push(peremennaya);
           }
-         }
-      if (errors != 1) {
-        console.log(i);
-        resultCountry.push(peremennaya);
-      }
-    }
-    //console.log(resultCountry)
-    resolve(resultCountry);
+        }
+      //console.log(resultCountry)
+      resolve(resultCountry);
+      })
   })
-})
 };
 
-let hard = 1;
-let massivChisel = [];
+  let countries ="80500";
+  let hard = 0;
 
-(  ()=>{
-  /*for (i=0;i<3*hard;i++){
-    console.log(collectDB[randomNumber(0,collectDB.length)])
+    for (let z=0; z<base.countriesBase.length;z++){
+      if (base.countriesBase[z].id == countries){
+        hard = base.countriesBase[z].challenge;
+
+      }
   }
-*/
-    randomCountry(2185366,4)
+
+( ()=>{
+let countCountry = []
+    for (i=0;i<10;i++){
+        countCountry.push(collectDB[randomNumber(0,collectDB.length)])
+    }
+console.log(countCountry);
+console.log(_.countBy(countCountry));
+let countObject = []
+
+
+
+    randomCountry(countries,hard+1)
       .then((item)=>{
         console.log(item)
   })
 
 }
 )()
-/*
-  rez('history', {"hard":"4"})
-      .then((item) =>{
-         console.log(item)
-       })
-         .catch((errorMessage)=>{
-           console.log(errorMessage);
-      });
-*/
+
     MongoClient.connect(url, (err, client) => {
     assert.equal(null, err);
     const db = client.db(dbName);

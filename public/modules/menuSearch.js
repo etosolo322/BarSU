@@ -28,3 +28,10 @@ app.use('/public', express.static('public'));
       };
 
 module.exports = menuSearch;
+/*
+{
+  country:idCountry,
+  favoriteCategory:[],
+  negativeCategory:[],
+  maxHard:3
+}*/
