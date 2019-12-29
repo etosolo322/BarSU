@@ -15,10 +15,9 @@ app.use('/public', express.static('public'));
       function menuSearch (collect, find) {
             return new Promise ((resolve, reject) => {
           MongoClient.connect(url, (err, client) => {
-
           const db = client.db(dbName);
           const collection =db.collection(collect);
-
+      //      console.log(db.listCollections())
                   collection.find(find).toArray((err, results)=>{
                       if(err) console.log(err);
                     client.close();

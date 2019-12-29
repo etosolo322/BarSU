@@ -4,7 +4,7 @@
      "type":"Feature",
         "properties" : {
            "srid"          : "4326",
-           "id"            : "1983628",
+           "id"            : "",
            "name"          : "South Georgia and the South Sandwich Islands",
            "capital"       : "Кинг-Эдуард-Пойнт",
            "neighbour"     : "286393",

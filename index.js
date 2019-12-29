@@ -1,7 +1,4 @@
-const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-  "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-];
-let Data = new Date();
+const collectDB = ["animals", "cinema", "geography", "history", "human", "literature", "multsComics", "music", "programming", "science", "society", "sport"];
 const express = require('express');
 const bodyParser = require( 'body-parser' );
 const app = express();
@@ -33,18 +30,67 @@ app.get('/sendMenu', (req,res) => {
      });
 })
 app.get('/', (req, res) => {
+
   res.render ('country.ejs');
 } );
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+function randomNumber(min,max){
+  return Math.floor(Math.random() * (max-1 - min + 1)) + min
+}
 
+function randomCountry(coutry,count){
+    return new Promise ((resolve, reject) => {
+let resultCountry = [];
+    rez("country", {"country":String(coutry)})
+        .then((item) =>{
+        //  console.log(item)
+            for (let i=0;i<count;i++){
+          let peremennaya = item[randomNumber(0,item.length)]
+      console.log(peremennaya._id)
+      let  errors = 0;
+          for (j = -1; j < resultCountry.length; j++) {
+              if (peremennaya == resultCountry[j]) {
+                errors = 1;
+                i--;
+          }
+         }
+      if (errors != 1) {
+        console.log(i);
+        resultCountry.push(peremennaya);
+      }
+    }
+    //console.log(resultCountry)
+    resolve(resultCountry);
+  })
+})
+};
 
-  rez('history', {"hard":"1"})
+let hard = 1;
+let massivChisel = [];
+
+(  ()=>{
+  /*for (i=0;i<3*hard;i++){
+    console.log(collectDB[randomNumber(0,collectDB.length)])
+  }
+*/
+    randomCountry(2185366,4)
+      .then((item)=>{
+        console.log(item)
+  })
+
+}
+)()
+/*
+  rez('history', {"hard":"4"})
       .then((item) =>{
          console.log(item)
        })
          .catch((errorMessage)=>{
            console.log(errorMessage);
       });
-
+*/
     MongoClient.connect(url, (err, client) => {
     assert.equal(null, err);
     const db = client.db(dbName);
