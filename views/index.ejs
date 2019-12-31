@@ -22,7 +22,7 @@
                         <p>  Вариант Д</p><br>
                           <input type = 'text' class = 'inputBox' id = 'vD'><br>
                           <p>  сложность</p><br>
-                            <input type = 'text' class = 'inputBox' id = 'hard'><br>
+                            <input type = 'text' value = '1' class = 'inputBox' id = 'hard'><br>
             </div>
       <div id ='buttonOrder'>Оформить заказ</div>
       </div>
@@ -58,12 +58,11 @@
               }
 
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", '/order', true);
+                    xhr.open("POST", '/country', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
                     xhr.send(JSON.stringify(body));
 
 window.location.reload();
-
 
               }
         </script>
