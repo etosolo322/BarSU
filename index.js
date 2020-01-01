@@ -98,7 +98,6 @@ console.log(countCountry[Object.keys(countCountry)[0]]);
 */
 }
 )()
-
   app.post("/country", (req,res) => {
       //  console.log(req.body)
         db.collection('ezy').insertOne(req.body,(err,result)=>{
