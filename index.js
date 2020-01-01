@@ -13,12 +13,9 @@ var cheerio = require('cheerio');
 const url = 'mongodb://localhost:27017/';
 const dbName = 'playGame';
 
-var massivZaskazov = {};
-const massMenu = [];
   const rez =   require("./public/modules/menuSearch");
   const parser =   require("./public/modules/parser");
   const base =   require("./public/modules/cnt_base.json");
-  var massiv = [];
 
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( bodyParser.json() )
@@ -30,15 +27,18 @@ app.get('/', (req, res) => {
 (
   ()=>{
 /*
-      for (let i =15;i<20;i++){
-        let url = 'https://umnik.net/tags/slozhnost-10?page='+i
-        parser(url,i)
+      for (let i =1;i<116;i++){
+        setTimeout((function(index){
+          return function() {
+            let url = 'https://umnik.net/tags/slozhnost-10000?page='+i;
+             parser(url,i);
+             console.log(i)
+          };
+        })(i), 2200 * (i + 1))
       };
       */
-      }
-
+  }
 )()
-
 
 //////////////////////////////////////////////////////
 function randomNumber(min,max){
@@ -74,11 +74,9 @@ function randomCountry(coutry,count){
 
   let countries ="80500";
   let hard = 0;
-
     for (let z=0; z<base.countriesBase.length;z++){
       if (base.countriesBase[z].id == countries){
         hard = base.countriesBase[z].challenge;
-
       }
   }
 
@@ -92,7 +90,6 @@ let countCountry = []
   //это отправлять на выдачу вопросов
 console.log(Object.keys(countCountry)[0])
 console.log(countCountry[Object.keys(countCountry)[0]]);
-
 /*
     randomCountry(countries,hard+1)
       .then((item)=>{
@@ -102,27 +99,22 @@ console.log(countCountry[Object.keys(countCountry)[0]]);
 }
 )()
 
-    MongoClient.connect(url, (err, client) => {
-    assert.equal(null, err);
-    const db = client.db(dbName);
-    const collection =db.collection('ezy');
-      app.post("/country", (req,res) => {
+  app.post("/country", (req,res) => {
       //  console.log(req.body)
-        collection.insertOne(req.body,(err,result)=>{
+        db.collection('ezy').insertOne(req.body,(err,result)=>{
                   console.log(req.body)
-                          if(err){
-                            console.log(err);
-                            res.sendStatus(500);
-                          }
+                          if(err)
+    {
+    console.log(err);
+    res.sendStatus(500);
+    }
     res.redirect('/order')
-                      })
-            })
-    });
+          })
+  })
 
     app.get('/1', (req, res) => {
             res.render ('index.ejs');
     } );
-
 
         app.get('/sendMenu', (req,res) => {
           rez('ezy', {})
@@ -133,19 +125,10 @@ console.log(countCountry[Object.keys(countCountry)[0]]);
              });
       })
 
-
-app.get('/admin', (req,res) => {
-
-  rez('order', {})
-  .then((items) =>{ //console.log(items);
-     res.render ('admin.ejs', {post:items});})
-     .catch((errorMessage)=>{
-       console.log(errorMessage);
-     });
-    })
-
-
-                    app.listen(process.env.PORT || 3000, () => {
-                        console.log('--//API  start 3000--//');
-
-                      })﻿;
+MongoClient.connect(url, (err, client) => {
+  assert.equal(null, err);
+  db = client.db(dbName);
+  app.listen(process.env.PORT || 3000, () => {
+        console.log('--//API  start 3000--//');
+      })﻿;
+        });
