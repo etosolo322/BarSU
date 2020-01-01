@@ -10,7 +10,7 @@ app.use('/public', express.static('public'));
       function menuSearch (collect, find) {
             return new Promise ((resolve, reject) => {
       //      console.log(db.listCollections())
-                  db.collection(collect).find(find).toArray((err, results)=>{
+                client.db("playGame").collection(collect).find(find).toArray((err, results)=>{
                       if(err) console.log(err);
                     resolve(results);
                   })
