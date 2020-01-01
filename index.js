@@ -15,7 +15,7 @@ const dbName = 'playGame';
 
   const rez =   require("./public/modules/menuSearch");
   const parser =   require("./public/modules/parser");
-  const base =   require("./public/modules/cnt_base.json");
+  const baseList =   require("./public/modules/cnt_base.json");
 
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( bodyParser.json() )
@@ -24,8 +24,17 @@ app.get('/', (req, res) => {
   res.render ('country.ejs');
 } );
 
+const countryPath = (country)=>{
+  for (let i=0;i<baseList.countriesBase.length;i++){
+    if (baseList.countriesBase[i].id == country){
+      console.log("/public/countries"+baseList.countriesBase[i].name+"_AL2.GeoJson")
+    }
+  }
+}
+
 (
   ()=>{
+    countryPath("2177161")
 /*
       for (let i =1;i<116;i++){
         setTimeout((function(index){
@@ -37,8 +46,12 @@ app.get('/', (req, res) => {
         })(i), 2200 * (i + 1))
       };
       */
+
+
   }
 )()
+
+
 
 //////////////////////////////////////////////////////
 function randomNumber(min,max){
@@ -74,9 +87,9 @@ function randomCountry(coutry,count){
 
   let countries ="80500";
   let hard = 0;
-    for (let z=0; z<base.countriesBase.length;z++){
-      if (base.countriesBase[z].id == countries){
-        hard = base.countriesBase[z].challenge;
+    for (let z=0; z<baseList.countriesBase.length;z++){
+      if (baseList.countriesBase[z].id == countries){
+        hard = baseList.countriesBase[z].challenge;
       }
   }
 
