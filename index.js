@@ -19,7 +19,6 @@ const dbName = 'playGame';
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( bodyParser.json() )
 
-
 app.get('/', (req, res) => {
 
   countryPath(countries)
@@ -95,6 +94,7 @@ const picturePath = (country) =>{
 
 
 ( ()=>{
+
 /*
       for (let i =1;i<116;i++){
         setTimeout((function(index){
@@ -105,6 +105,18 @@ const picturePath = (country) =>{
           };
         })(i), 2200 * (i + 1))
       };
+
+      let truesMass = [];
+      for (let i=2000;i<2400;i++){
+        let quessions = SearchOnDB("hard1",{_id:i})
+                    .then((item)=>{
+                      if (item[0]._id==undefined){
+                        console.log(i)
+                      }
+                      //  console.log(item)
+                    })
+      }
+
       */
   }
 )()
