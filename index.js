@@ -19,18 +19,64 @@ const dbName = 'playGame';
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( bodyParser.json() )
 
+
 app.get('/', (req, res) => {
-  ///вопросы по стране
+
+  countryPath(countries)
+  picturePath(countries)
+  neighbourCountry(countries)
+
+          //вопросы по страну
         randomCountry(countries,hard+1)
           .then((item)=>{
-            console.log(item)
+          //  console.log(item)
             res.send (item);
+
           })
-  //путь к файлу сгеоданными страны
-  countryPath("2177161")
 
 } );
 
+  let countries ="571802";
+  let hard = 0;
+
+const nameCountry = (country) =>{
+  for (let i=0;i<baseList.countriesBase.length;i++){
+    if (baseList.countriesBase[i].id == country){
+      return baseList.countriesBase[i].name;
+    }
+  }
+}
+
+//сложность вопроса
+    for (let z=0; z<baseList.countriesBase.length;z++){
+      if (baseList.countriesBase[z].id == countries){
+        hard = baseList.countriesBase[z].challenge;
+      }
+  }
+
+const neighbourCountry = (country) =>{
+  for (let i=0;i<baseList.countriesBase.length;i++){
+    if (baseList.countriesBase[i].id == country){
+          console.log(baseList.countriesBase[i].neighbour)
+          console.log(baseList.countriesBase[i].neighbour.length)
+          for (let j=0;j<baseList.countriesBase[i].neighbour.length;j++){
+            console.log(nameCountry( baseList.countriesBase[i].neighbour[j]))
+          }
+          break;
+    }
+  }
+}
+
+const factsCountry = (country)=>{
+  for (let i=0;i<baseList.countriesBase.length;i++){
+    if (baseList.countriesBase[i].id == country){
+      for (let j=0;j<baseList.countriesBase[i].facts.length;j++){
+        console.log(baseList.countriesBase[i].facts[j])
+      }
+      break;
+    }
+  }
+}
 const countryPath = (country)=>{
   for (let i=0;i<baseList.countriesBase.length;i++){
     if (baseList.countriesBase[i].id == country){
@@ -94,14 +140,6 @@ function randomCountry(coutry,count){
       })
   })
 };
-
-  let countries ="80500";
-  let hard = 0;
-    for (let z=0; z<baseList.countriesBase.length;z++){
-      if (baseList.countriesBase[z].id == countries){
-        hard = baseList.countriesBase[z].challenge;
-      }
-  }
 
 ( ()=>{
 let countCountry = []
