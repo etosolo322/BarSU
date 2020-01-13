@@ -156,7 +156,7 @@ function shufler(array){
   	return JSON.stringify(arr);
   }
 
-  array.answer=[{'trues':array.trues},{'vB':array.vB},{'vC':array.vC}, {'vD':array.vD}];
+  array.answer=[{'vB':array.vB}, {'vC':array.vC}, {'trues':array.trues}, {'vD':array.vD}];
         delete array._id
         delete array.trues
         delete array.vB
