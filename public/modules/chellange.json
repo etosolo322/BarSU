@@ -1,0 +1,38 @@
+{
+          "1":{
+            "level1":["hard4"],
+            "level2":["hard3"],
+            "level3":["hard2"],
+            "level4":["hard2"],
+            "level5":["hard1"]
+         },
+         "2":{
+           "level1":["hard5","hard6"],
+           "level2":["hard4","hard5"],
+           "level3":["hard3","hard4"],
+           "level4":["hard2","hard3"],
+           "level5":["hard1","hard2"]
+        },
+        "3":{
+          "level1":["hard6","hard7","hard8"],
+          "level2":["hard5","hard6","hard6"],
+          "level3":["hard5","hard5","hard5"],
+          "level4":["hard4","hard5","hard4"],
+          "level5":["hard2","hard3","hard1"]
+       },
+       "4":{
+         "level1":["hard7","hard8","hard9","hard10"],
+         "level2":["hard6","hard7","hard8","hard9"],
+         "level3":["hard5","hard6","hard6","hard8"],
+         "level4":["hard4","hard4","hard5","hard6"],
+         "level5":["hard2","hard3","hard4","hard1"]
+      },
+      "5":{
+        "level1":["hard8","hard9","hard10","hard11","hard12"],
+        "level2":["hard6","hard8","hard8","hard10","hard10"],
+        "level3":["hard5","hard7","hard7","hard8","hard9"],
+        "level4":["hard4","hard5","hard6","hard7","hard8"],
+        "level5":["hard2","hard4","hard4","hard5","hard5"]
+     }
+
+}

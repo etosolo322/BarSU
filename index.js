@@ -14,88 +14,160 @@ const url = 'mongodb://localhost:27017/';
 const dbName = 'playGame';
 
   const parser =   require("./public/modules/parser");
-  const baseList =   require("./public/modules/cnt_base.json");
+  const baseList =  JSON.parse(JSON.stringify(require("./public/modules/cnt_base.json"))) ;
+  const chellenge =  JSON.parse(JSON.stringify(require("./public/modules/chellange.json"))) ;
 
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( bodyParser.json() )
 
+let massCountQues ={
+  'hard1':'2385',
+  'hard2':'2385',
+  'hard3':'2249',
+  'hard4':'3669',
+  'hard5':'2445',
+  'hard6':'4215',
+  'hard7':'4616',
+  'hard8':'4890',
+  'hard9':'4725',
+  'hard10':'3675',
+  'hard11':'2385',
+  'hard12':'1725',
+}
+
+async function vyvod (fromServer){
+  let quesAvia = []
+  let quesTank = []
+  let quesPeho = []
+  let infoCountry = detailCountry(fromServer.country);
+
+      for (let i=0;i<infoCountry.hard; i++){
+        let hardLevelAvia = chellenge[String(infoCountry.hard)]['level'+parseInt(fromServer.levelAvia)][randomNumber(1,infoCountry.hard)-1];
+        let hardLevelTank = chellenge[String(infoCountry.hard)]['level'+parseInt(fromServer.levelTank)][randomNumber(1,infoCountry.hard)-1];
+        let hardLevelPeho = chellenge[String(infoCountry.hard)]['level'+parseInt(fromServer.levelPeho)][randomNumber(1,infoCountry.hard)-1];
+
+     quesAvia.push( await  getQues(hardLevelAvia, randomNumber(1,massCountQues[hardLevelAvia])))
+     quesTank.push( await  getQues(hardLevelTank, randomNumber(1,massCountQues[hardLevelTank])))
+     quesPeho.push( await  getQues(hardLevelPeho, randomNumber(1,massCountQues[hardLevelPeho])))
+  }
+
+    return await {
+      'quesAvia':quesAvia,
+      'quesTank':quesTank,
+      'quesPeho':quesPeho
+    }
+}
+
 app.get('/', (req, res) => {
-
-  countryPath(countries)
-  picturePath(countries)
-  neighbourCountry(countries)
-
-          //вопросы по страну
-        randomCountry(countries,hard+1)
-          .then((item)=>{
-          //  console.log(item)
-            res.send (item);
-
-          })
-
+      res.render ('index.ejs');
 } );
 
-  let countries ="571802";
-  let hard = 0;
+app.post("/fromClient", (req,res) => {
+  let rezalt = {  }
+  console.log(req.body)
+  //  console.log(randomCountry(req.body.country))
+    vyvod (req.body).
+      then((item)=>{
+        //  res.send(item)
+      //  console.log(detailCountry(req.body.country))
+        rezalt.quesion = item;
+        rezalt.facts  = detailCountry(req.body.country).facts;
+        rezalt.picture = detailCountry(req.body.country).picture;
+        randomCountry(req.body.country)
+            .then((item)=>{
+            //  console.log(item)
+            rezalt.countryQues = item;
+            })
+            .then(()=>{
+          //    console.log(rezalt)
+                res.send(rezalt)
+              })
+      })
+})
 
-const nameCountry = (country) =>{
+async function getQues(hard,max){
+  let arrCounter = [];
+    return new Promise ((resolve, reject) => {
+        //  console.log('promise')
+        SearchOnDB (hard, {"_id":max})
+          .then((item) =>{
+            if(item.length==0){
+              item = SearchOnDB (hard, {"_id":1})
+              console.log('max')
+            }
+        //console.log(item)
+        resolve(shufler(item[0]));
+        })
+  })
+};
+
+
+
+const detailCountry = (country) =>{
+      let    hard=0;
+      let    name='';
+      let    neighbour=[];
+      let    facts = [];
+      let    picture = '';
   for (let i=0;i<baseList.countriesBase.length;i++){
     if (baseList.countriesBase[i].id == country){
-      return baseList.countriesBase[i].name;
+  //    console.log("/public/photoCountries/"+baseList.countriesBase[i].name+".jpg")
+       hard = baseList.countriesBase[i].challenge;
+       name = baseList.countriesBase[i].name;
+       picture = "/public/photoCountries/"+baseList.countriesBase[i].name+".jpg"
+       for (let j=0;j<baseList.countriesBase[i].neighbour.length;j++){
+         neighbour.push(baseList.countriesBase[i].neighbour[j])
+       }
+       for (let j=0;j<baseList.countriesBase[i].facts.length;j++){
+        facts.push(baseList.countriesBase[i].facts[j]);
+       }
+       break;
     }
+  }
+  return {
+    'id' : country,
+    'name' : name,
+    'hard' : hard,
+    'neighbour' : neighbour,
+    'facts' : facts,
+    'picture' : picture
   }
 }
 
-//сложность вопроса
-    for (let z=0; z<baseList.countriesBase.length;z++){
-      if (baseList.countriesBase[z].id == countries){
-        hard = baseList.countriesBase[z].challenge;
-      }
-  }
-
-const neighbourCountry = (country) =>{
-  for (let i=0;i<baseList.countriesBase.length;i++){
-    if (baseList.countriesBase[i].id == country){
-          console.log(baseList.countriesBase[i].neighbour)
-          console.log(baseList.countriesBase[i].neighbour.length)
-          for (let j=0;j<baseList.countriesBase[i].neighbour.length;j++){
-            console.log(nameCountry( baseList.countriesBase[i].neighbour[j]))
-          }
-          break;
-    }
-  }
-}
-
-const factsCountry = (country)=>{
-  for (let i=0;i<baseList.countriesBase.length;i++){
-    if (baseList.countriesBase[i].id == country){
-      for (let j=0;j<baseList.countriesBase[i].facts.length;j++){
-        console.log(baseList.countriesBase[i].facts[j])
-      }
-      break;
-    }
-  }
-}
 const countryPath = (country)=>{
   for (let i=0;i<baseList.countriesBase.length;i++){
     if (baseList.countriesBase[i].id == country){
       console.log("/public/countries/"+baseList.countriesBase[i].name+"_AL2.GeoJson")
-    }
-  }
-}
-
-const picturePath = (country) =>{
-  for (let i=0;i<baseList.countriesBase.length;i++){
-    if (baseList.countriesBase[i].id == country){
-      console.log("/public/photoCountries/"+baseList.countriesBase[i].name+".jpg")
-    }
+      }
   }
 }
 
 
-( ()=>{
+function shufler(array){
+  console.log(array)
+    function shuffle(arr){
+  	var j, temp;
+  	for(var i = arr.length - 1; i > 0; i--){
+  		j = Math.floor(Math.random()*(i + 1));
+  		temp = arr[j];
+  		arr[j] = arr[i];
+  		arr[i] = temp;
+  	}
+  	return JSON.stringify(arr);
+  }
 
-/*
+  array.answer=[{'trues':array.trues},{'vB':array.vB},{'vC':array.vC}, {'vD':array.vD}];
+        delete array._id
+        delete array.trues
+        delete array.vB
+        delete array.vC
+        delete array.vD
+        delete array.country
+          JSON.stringify(shuffle(array.answer))
+          return array;
+}
+(()=>{
+  /*
       for (let i =1;i<116;i++){
         setTimeout((function(index){
           return function() {
@@ -105,19 +177,7 @@ const picturePath = (country) =>{
           };
         })(i), 2200 * (i + 1))
       };
-
-      let truesMass = [];
-      for (let i=2000;i<2400;i++){
-        let quessions = SearchOnDB("hard1",{_id:i})
-                    .then((item)=>{
-                      if (item[0]._id==undefined){
-                        console.log(i)
-                      }
-                      //  console.log(item)
-                    })
-      }
-
-      */
+  */
   }
 )()
 //////////////////////////////////////////////////////
@@ -126,13 +186,14 @@ function randomNumber(min,max){
   return Math.floor(Math.random() * (max-1 - min + 1)) + min
 }
 
-function randomCountry(coutry,count){
+async function randomCountry(coutry){
     return new Promise ((resolve, reject) => {
+      let infoCountry = detailCountry(coutry);
         let resultCountry = [];
         SearchOnDB ("country", {"country":String(coutry)})
           .then((item) =>{
           //console.log(base.countriesBase[0].id)
-            for (let i = 0; i < count; i++){
+            for (let i = 0; i < detailCountry(coutry).hard+1; i++){
               let peremennaya = item[randomNumber(0,item.length)]
           //    console.log(peremennaya._id)
               let  errors = 0;
@@ -143,8 +204,8 @@ function randomCountry(coutry,count){
                   }
                  }
             if (errors != 1) {
-            //  console.log(i);
-              resultCountry.push(peremennaya);
+            //  console.log(shufler(peremennaya));
+              resultCountry.push(shufler(peremennaya));
             }
         }
       //console.log(resultCountry)
@@ -153,29 +214,16 @@ function randomCountry(coutry,count){
   })
 };
 
-( ()=>{
-let countCountry = []
-    for (i=0;i<hard*3;i++){
-        countCountry.push(collectDB[randomNumber(0,collectDB.length)])
-    }
-    countCountry = _.countBy(countCountry)
-  console.log(countCountry);
-  //это отправлять на выдачу вопросов
-  console.log(Object.keys(countCountry)[0])
-  console.log(countCountry[Object.keys(countCountry)[0]]);
-}
-)()
-
   app.post("/country", (req,res) => {
       //  console.log(req.body)
-        db.collection('ezy').insertOne(req.body,(err,result)=>{
+       db.collection('hard7').insertOne(req.body,(err,result)=>{
                   console.log(req.body)
                           if(err)
     {
     console.log(err);
-    res.sendStatus(500);
+      res.sendStatus(500);
     }
-    res.send('ok')
+      res.redirect('/order')
           })
   })
 
@@ -192,13 +240,17 @@ let countCountry = []
              });
   })
 
-      function SearchOnDB (collect, find) {
-            return new Promise ((resolve, reject) => {
+      async function SearchOnDB (collect, find) {
+             return new Promise ((resolve, reject) => {
       //      console.log(db.listCollections())
                 db.collection(collect).find(find).toArray((err, results)=>{
                       if(err) console.log(err);
+                      if (results.length !='1'){
+                        SearchOnDB ('hard1', 1)
+                  //      console.log(collect+'  '+JSON.stringify(find))
+                      }
                     resolve(results);
-                  })
+                })
 
           })
       };

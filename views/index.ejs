@@ -20,8 +20,7 @@
                         <input type = 'text' class = 'inputBox' id = 'vC'><br>
                         <p>  Вариант Д</p><br>
                           <input type = 'text' class = 'inputBox' id = 'vD'><br>
-                          <p>  сложность</p><br>
-                            <input type = 'text' value = '1' class = 'inputBox' id = 'hard'><br>
+
             </div>
       <div id ='buttonOrder'>Оформить заказ</div>
       </div>
@@ -38,30 +37,39 @@
           })()
 */
           document.getElementById('buttonOrder').onclick = () =>{
-
           let  _id = document.getElementById('_id').value;
           let  vopros = document.getElementById('vopros').value;
           let  trues = document.getElementById('trues').value;
           let  vB = document.getElementById('vB').value;
           let  vC = document.getElementById('vC').value;
           let  vD = document.getElementById('vD').value;
-          let  hard = document.getElementById('hard').value;
+      //    let  hard = document.getElementById('hard').value;
               let body = {
-                "_id":_id,
-                "vopros":vopros,
-                "trues":trues,
-                "vB":vB,
-                "vC":vC,
-                "vD":vD,
-                "hard":hard,
+                country:'59470',
+                levelAvia:'1',
+                levelTank:'1',
+                levelPeho:'1'
+            //    "hard":hard,
               }
-
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", '/country', true);
+                    xhr.open("POST", '/fromClient', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
                     xhr.send(JSON.stringify(body));
+                    xhr.addEventListener('readystatechange', statusReady);
 
-window.location.reload();
+                    function statusReady()
+                    {
+                        if(xhr.readyState == 4)
+                        {
+                            let rezalt = JSON.parse(xhr.responseText)
+                            console.log(rezalt)
+                          //  console.log(rezalt.countryQues[0].answer[0])
+                        }
+}
+
+
+
+//window.location.reload();
 
               }
         </script>
